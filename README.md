@@ -1,2 +1,3 @@
-# pizza-shop-server
+# Pizza Shop (Server)
+
 Server for pizza shop
