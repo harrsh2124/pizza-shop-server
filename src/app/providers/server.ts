@@ -3,13 +3,18 @@ import http from 'http';
 import { Logger } from 'pino';
 import env from '../../env';
 import logger from './logger';
+import { Server as SocketServer, Socket } from 'socket.io';
 
 class Server {
     server: http.Server;
+    io: SocketServer;
+    socket: Socket | null;
     logger: Logger;
 
     constructor(app: Application) {
         this.server = http.createServer(app);
+        this.io = new SocketServer(this.server);
+        this.socket = null;
         this.logger = logger;
     }
 
@@ -22,6 +27,19 @@ class Server {
             `Server is running at ${env.app.port} port on path ${env.app.api_prefix}`
         );
         this.server.on('error', this.onError);
+    }
+
+    async startSocketServer() {
+        this.io.on('connection', (socket) => {
+            this.logger.info(`Socket ID ${socket.id} is connected...`);
+
+            this.socket = socket;
+
+            socket.on('disconnect', (reason) => {
+                this.logger.info('Socket disconnected...');
+                this.logger.info(`Reason is ${reason}...`);
+            });
+        });
     }
 
     /**

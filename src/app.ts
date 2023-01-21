@@ -4,12 +4,15 @@ import Server from './app/providers/server';
 
 const express = new Express();
 
-Promise.all([express.initializeApp(), express.configureViews()]).then(() => {
-    const app = express.app;
+Promise.all([express.initializeApp(), express.configureViews()]).then(
+    async () => {
+        const app = express.app;
 
-    const httpServer = new Server(app);
-    httpServer.start();
-});
+        const httpServer = new Server(app);
+        httpServer.start();
+        httpServer.startSocketServer();
+    }
+);
 
 process.on('uncaughtException', (err) => {
     logger.error(err);
