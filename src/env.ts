@@ -16,6 +16,10 @@ const env = {
         user_uploaded_content_path: getOsEnv('USER_UPLOADED_CONTENT_PATH'),
         api_prefix: getOsEnv('API_PREFIX'),
     },
+
+    cors: {
+        urls: getOsEnv('CORS_AVAILABLE_LINKS').split(','),
+    },
 };
 
 export default env;
